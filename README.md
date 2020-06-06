@@ -102,7 +102,7 @@ plot(res_buggy, logjoint; size=(300, 300), title="Bug-free sampler")
 
 ![](docs/buggy.png)
 
-You can also check the maximum mean discrepancy from the two results.
+You can also check the maximum mean discrepancy (MMD) using the two results.
 
 ```julia
 @info "MMD" mmd_of(res) mmd_of(res_buggy)
