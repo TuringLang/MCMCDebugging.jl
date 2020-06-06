@@ -127,4 +127,5 @@ As you can see, the bug-free one attains much smaller value.
 ## References
 
 [1] Geweke J. Getting it right: Joint distribution tests of posterior simulators. Journal of the American Statistical Association. 2004 Sep 1;99(467):799-804.
+
 [2] Grosse RB, Duvenaud DK. Testing mcmc code. arXiv preprint arXiv:1412.5218. 2014 Dec 16.
