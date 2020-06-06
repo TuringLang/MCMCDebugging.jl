@@ -35,17 +35,17 @@ g(θ, x) = cat(θ, x; dims=1)
 You can perform the Geweke test for the bug-free sampler via
 
 ```julia
-res = perform(GewekeTest(1_000), rand_θ, rand_x_given, rand_θ_given, g)
+res = perform(GewekeTest(2_000), rand_θ, rand_x_given, rand_θ_given, g)
 ```
 
 ```julia
 Geweke (Joint Distribution) Test
 --------------------------------
 Results:
-    Number of samples: 1000
+    Number of samples: 2000
     Parameter dimension: 1
     Data dimension: 3
-    Statistic: [0.3031308858808288, -2.0751841059369287, -2.42080406929413, 0.7055687540323133]
+    Statistic: [-1.1707037922907118, 1.2325275217058613, 1.7448487069977408, 0.6705977622612224]
 ```
 
 Plotting functionality is supported via Plots.jl
