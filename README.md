@@ -6,7 +6,7 @@ This package implements a few utilities for debugging MCMC samplers, which inclu
   - See the references [1,2] or [this blog](https://lips.cs.princeton.edu/testing-mcmc-code-part-2-integration-tests/) for details
 - [ ] Central limit theorem test
 
-See the [notebook](docs/example.ipynb) for an example.
+See the [notebook](https://nbviewer.jupyter.org/github/xukai92/MCMCDebugging.jl/blob/master/docs/example.ipynb) for an example.
 
 ## TODOs
 
