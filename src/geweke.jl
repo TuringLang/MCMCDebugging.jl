@@ -90,8 +90,14 @@ function compute_statistic!(res::GewekeTestResult, g)
     return res
 end
 
-mmd_of(res::MCMCDebugging.GewekeTestResult; kwargs...) = 
-    mmd_of(res.samples_fwd, res.samples_bwd; kwargs...)
+function mmd_of(res::MCMCDebugging.GewekeTestResult; force=false, kwargs...)
+    n_samples = size(res.samples_bwd, 2)
+    if force || n_samples <= 5_000
+        return mmd_of(res.samples_fwd, res.samples_bwd; kwargs...)
+    else
+        @warn "The number of samples ($n_samples) is large and MMD computation would be slow. Please use `mmd_of(res; force=true)` if you still want to compute MMD."
+    end
+end
 
 @recipe function f(res::GewekeTestResult, logjoint; n_grids=100)
     @unpack samples_fwd, samples_bwd = res
