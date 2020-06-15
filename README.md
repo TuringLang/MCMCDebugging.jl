@@ -2,7 +2,7 @@
 
 This package implements a few utilities for debugging MCMC samplers, which includes
 
-- Geweke test
+- [x] Geweke test
   - See the references [1,2] or [this blog](https://lips.cs.princeton.edu/testing-mcmc-code-part-2-integration-tests/) for details
 - [ ] Central limit theorem test
 
@@ -16,7 +16,7 @@ MCMCDebugging.jl allows debugging use models defined by DynamicPPL.jl.
 In the example [notebook](https://nbviewer.jupyter.org/github/xukai92/MCMCDebugging.jl/blob/master/docs/example.ipynb), the test model is defined as
 
 ```julia
-@model function BetaBinomial(θ=missing, x=missing)
+@model function BetaBinomial(θ, x)
     θ ~ Beta(2, 3)
     x ~ Binomial(3, θ)
     return θ, x
@@ -25,8 +25,8 @@ end
 
 There are a few requirements from MCMCDebugging.jl to use the defined model.
 
-1. The model should return the parameter `θ` and the data `x` as a tuple.
-2. The model should optionally take `θ` and `x` as inputs.
+1. The model should take `θ` and `x` as inputs.
+2. The model should return the parameter `θ` and the data `x` as a tuple.
 
 With these two points, MCMCDebugging.jl can generate several functions used by lower-level APIs.
 
