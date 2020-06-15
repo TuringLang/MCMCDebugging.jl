@@ -6,6 +6,7 @@ mutable struct GewekeTestResult{T} <: AbstractMCMCResult
     samples_fwd::T
     samples_bwd::T
     statistic
+    pval
 end
 
 function Base.show(io::IO, res::GewekeTestResult)
@@ -16,6 +17,7 @@ function Base.show(io::IO, res::GewekeTestResult)
     println(io, "    Parameter dimension: $(size(res.samples_fwd.θ, 1))")
     println(io, "    Data dimension: $(size(res.samples_fwd.x, 1))")
     println(io, "    Statistic: $(res.statistic)")
+    println(io, "    P-value: $(res.pval)")
     if ismissing(res.statistic)
         println(io, "")
         println(
@@ -66,11 +68,11 @@ function perform(cfg::GewekeTest, rand_θ, rand_x_given, rand_θ_given, g=nothin
     # Compute statistics
     if isnothing(g)
         @warn "Test function `g` is not provided. Statistic is not computed."
-        statistic = missing
+        statistic, pval = missing, missing
     else
-        statistic = _compute_statistic(samples_fwd, samples_bwd, g)
+        statistic, pval = _compute_statistic(samples_fwd, samples_bwd, g)
     end
-    return GewekeTestResult(samples_fwd, samples_bwd, statistic)
+    return GewekeTestResult(samples_fwd, samples_bwd, statistic, pval)
 end
 
 function _compute_statistic(samples_fwd, samples_bwd, g)
@@ -80,13 +82,15 @@ function _compute_statistic(samples_fwd, samples_bwd, g)
     v_fwd = mean(x -> x.^2, g_fwd) - m_fwd.^2
     m_bwd = mean(g_bwd)
     v_bwd = mean(x -> x.^2, g_bwd) - m_bwd.^2
-    M₁, M₂ = length(samples_fwd), length(samples_bwd)
+    M₁, M₂ = length(g_fwd), length(g_bwd)
     statistic = (m_fwd - m_bwd) ./ sqrt.(v_fwd / M₁ + v_bwd / M₂)
+    pval = pvalue.(Ref(Normal(0, 1)), statistic)
+    return statistic, pval
 end
 
 function compute_statistic!(res::GewekeTestResult, g)
     @unpack samples_fwd, samples_bwd = res
-    res.statistic = _compute_statistic(samples_fwd, samples_bwd, g)
+    res.statistic, res.pval = _compute_statistic(samples_fwd, samples_bwd, g)
     return res
 end
 

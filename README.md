@@ -13,7 +13,6 @@ See the [notebook](https://nbviewer.jupyter.org/github/xukai92/MCMCDebugging.jl/
 - [ ] Interface with [DynamicPPL.jl](https://github.com/TuringLang/DynamicPPL.jl) so that `rand_θ` and `rand_x_given` can be automatically generated.
 - [ ] Interface with [AbstractMCMC.jl](https://github.com/TuringLang/AbstractMCMC.jl) so that `rand_θ_given` can be automatically generated.
 - [ ] Support KSD for Geweke test via [KernelGoodnessOfFit.jl](https://github.com/torfjelde/KernelGoodnessOfFit.jl/tree/master/src).
-  - MMD seems to work quite well so I would expect KSD to work better.
 
 ## References
 

@@ -1,6 +1,7 @@
 module MCMCDebugging
 
-using Parameters, ProgressMeter, RecipesBase, Statistics, LabelledArrays
+using Parameters, ProgressMeter, RecipesBase, Statistics, LabelledArrays, 
+    Distributions, HypothesisTests
 
 abstract type AbstractMCMCTest end
 abstract type AbstractMCMCResult end
