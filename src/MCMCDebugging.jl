@@ -1,7 +1,7 @@
 module MCMCDebugging
 
 using Parameters, ProgressMeter, RecipesBase, Statistics, LabelledArrays, 
-    Distributions, HypothesisTests
+    Distributions, HypothesisTests, DynamicPPL
 
 abstract type AbstractMCMCTest end
 abstract type AbstractMCMCResult end
@@ -14,6 +14,22 @@ export GewekeTest
 
 include("clt.jl")
 export CLTTest
+
+### DynamicPPL integration
+
+perform(cfg::GewekeTest, modelgen::ModelGen, rand_θ_given, g=nothing) = 
+    perform(cfg, modelgen(), θ -> modelgen(θ)()[2], rand_θ_given, g)
+
+@recipe function f(res::GewekeTestResult, modelgen::ModelGen)
+    m = modelgen()
+    vi = VarInfo(m)
+    spl = SampleFromPrior()
+    function _logjoint(θ, x)
+        vi[spl] = cat(θ, x; dims=1)
+        return logjoint(m, vi)
+    end
+    res, _logjoint
+end
 
 export perform, compute_statistic!
 

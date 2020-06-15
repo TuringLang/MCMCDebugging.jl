@@ -5,6 +5,7 @@ version = "0.1.0"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+DynamicPPL = "366bfd00-2699-11ea-058f-f148b4cae6d8"
 HypothesisTests = "09f84164-cd44-5f33-b23f-e6b0d136a0d5"
 LabelledArrays = "2ee39098-c373-598a-b85f-a56591580800"
 Parameters = "d96e819e-fc66-5662-9728-84c9c7592b0a"

@@ -40,16 +40,14 @@ end
 Run Geweke (joint distribution) test and compute the test statistic 
 using `g` as the test function as in Equation (6) of (Geweke, 2014).
 """
-function perform(cfg::GewekeTest, rand_θ, rand_x_given, rand_θ_given, g=nothing)
+function perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given, g=nothing)
     @unpack n_samples = cfg
     
     # Generate samples
-    local dim_θ, dim_x, samples_fwd, samples_bwd
-    θ_bwd = rand_θ()
+    local dim_θ, dim_x, samples_fwd, samples_bwd, θ_bwd
     @showprogress for i in 1:n_samples
         # Marginal-cnditional simulator
-        θ_fwd = rand_θ()
-        x_fwd = rand_x_given(θ_fwd)
+        θ_fwd, x_fwd = rand_marginal()
         if i == 1
             dim_θ = length(θ_fwd)
             dim_x = length(x_fwd)
@@ -60,8 +58,10 @@ function perform(cfg::GewekeTest, rand_θ, rand_x_given, rand_θ_given, g=nothin
         end
         samples_fwd[:,i] = cat(θ_fwd, x_fwd; dims=1)
         # Successive-conditional simulator
-        x_bwd = rand_x_given(θ_bwd)
-        if i > 1
+        if i == 1
+            θ_bwd, x_bwd = rand_marginal()
+        else
+            x_bwd = rand_x_given(θ_bwd)
             θ_bwd = rand_θ_given(x_bwd)
         end
         samples_bwd[:,i] = cat(θ_bwd, x_bwd; dims=1)
@@ -107,7 +107,7 @@ function mmd_of(res::MCMCDebugging.GewekeTestResult; force=false, kwargs...)
     end
 end
 
-@recipe function f(res::GewekeTestResult, logjoint; n_grids=100, verbose=true)
+@recipe function f(res::GewekeTestResult, logjoint::Function; n_grids=100, verbose=true)
     @unpack samples_fwd, samples_bwd = res
     logjoint_fwd = map(i -> logjoint(samples_fwd.θ[:,i], samples_fwd.x[:,i]), 1:size(samples_fwd, 2))
     logjoint_bwd = map(i -> logjoint(samples_bwd.θ[:,i], samples_bwd.x[:,i]), 1:size(samples_bwd, 2))
