@@ -7,6 +7,7 @@ mutable struct GewekeTestResult{T} <: AbstractMCMCResult
     samples_bwd::T
     statistic
     pval
+    qerror
 end
 
 function Base.show(io::IO, res::GewekeTestResult)
@@ -27,6 +28,9 @@ function Base.show(io::IO, res::GewekeTestResult)
             if you want compute statistic without rerun the simulation.
             """
         )
+    end
+    if !ismissing(res.qerror)
+        println(io, "    Quantile error: $(res.qerror)")
     end
 end
 
@@ -72,7 +76,7 @@ function perform(cfg::GewekeTest, rand_θ, rand_x_given, rand_θ_given, g=nothin
     else
         statistic, pval = _compute_statistic(samples_fwd, samples_bwd, g)
     end
-    return GewekeTestResult(samples_fwd, samples_bwd, statistic, pval)
+    return GewekeTestResult(samples_fwd, samples_bwd, statistic, pval, missing)
 end
 
 function _compute_statistic(samples_fwd, samples_bwd, g)
@@ -103,7 +107,7 @@ function mmd_of(res::MCMCDebugging.GewekeTestResult; force=false, kwargs...)
     end
 end
 
-@recipe function f(res::GewekeTestResult, logjoint; n_grids=100)
+@recipe function f(res::GewekeTestResult, logjoint; n_grids=100, verbose=true)
     @unpack samples_fwd, samples_bwd = res
     logjoint_fwd = map(i -> logjoint(samples_fwd.θ[:,i], samples_fwd.x[:,i]), 1:size(samples_fwd, 2))
     logjoint_bwd = map(i -> logjoint(samples_bwd.θ[:,i], samples_bwd.x[:,i]), 1:size(samples_bwd, 2))
@@ -117,6 +121,10 @@ end
         percent_fwd[i] = sum(joint_fwd .< v) / length(joint_fwd)
         percent_bwd[i] = sum(joint_bwd .< v) / length(joint_bwd)
     end
+
+    # Compute the absolute error
+    res.qerror = mean(abs.(percent_fwd .- percent_bwd))
+    verbose && println("Quantile error: $(res.qerror)")
     
     # Recipe
     legend --> :topleft
@@ -124,6 +132,15 @@ end
     @series begin
         linecolor := 2
         label := "Sampler"
+        percent_fwd, percent_bwd
+    end
+
+    @series begin
+        linecolor := nothing
+        label := "Error"
+        fillrange := percent_fwd
+        fillalpha := 0.5
+        fillcolor := :lightgray
         percent_fwd, percent_bwd
     end
     
