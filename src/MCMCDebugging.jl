@@ -1,6 +1,6 @@
 module MCMCDebugging
 
-using Parameters, ProgressMeter, RecipesBase, Statistics, LabelledArrays, 
+using UnPack, ProgressMeter, RecipesBase, Statistics, LabelledArrays, 
     Distributions, HypothesisTests, DynamicPPL
 
 abstract type AbstractMCMCTest end

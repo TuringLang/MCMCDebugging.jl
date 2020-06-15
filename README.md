@@ -51,7 +51,7 @@ where `n_samples` is the number of samples used for testing.
 Performing the Geweke test
 
 ```julia
-res = perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given, g=nothing)
+res = perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given, g=nothing; progress=true)
 ```
 
 where

@@ -40,12 +40,13 @@ end
 Run Geweke (joint distribution) test and compute the test statistic 
 using `g` as the test function as in Equation (6) of (Geweke, 2014).
 """
-function perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given, g=nothing)
+function perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given, g=nothing; progress=true)
     @unpack n_samples = cfg
     
     # Generate samples
     local dim_θ, dim_x, samples_fwd, samples_bwd, θ_bwd
-    @showprogress for i in 1:n_samples
+    pm = Progress(n_samples)
+    for i in 1:n_samples
         # Marginal-cnditional simulator
         θ_fwd, x_fwd = rand_marginal()
         if i == 1
@@ -65,6 +66,8 @@ function perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given, g=
             θ_bwd = rand_θ_given(x_bwd)
         end
         samples_bwd[:,i] = cat(θ_bwd, x_bwd; dims=1)
+        # Progress meter
+        progress && next!(pm)
     end
     samples_fwd = @LArray samples_fwd (θ=(1:dim_θ,:), x=(dim_θ+1:dim_θ+dim_x,:))
     samples_bwd = @LArray samples_bwd (θ=(1:dim_θ,:), x=(dim_θ+1:dim_θ+dim_x,:))
