@@ -10,9 +10,9 @@ See the [notebook](https://nbviewer.jupyter.org/github/xukai92/MCMCDebugging.jl/
 
 ## Usage
 
-### Defining test model via DynamicPPL.jl
+### Defining test models via DynamicPPL.jl
 
-MCMCDebugging.jl allows debugging use models defined by DynamicPPL.jl.
+MCMCDebugging.jl allows using DynamicPPL.jl to define test models.
 In the example [notebook](https://nbviewer.jupyter.org/github/xukai92/MCMCDebugging.jl/blob/master/docs/example.ipynb), the test model is defined as
 
 ```julia
@@ -30,18 +30,28 @@ There are a few requirements from MCMCDebugging.jl to use the defined model.
 
 With these two points, MCMCDebugging.jl can generate several functions used by lower-level APIs.
 
-1. `rand_θ()`: drawing `θ` from the prior
+1. `rand_marginal()`: drawing `θ` and `x` as a tuple
 2. `rand_x_given(θ)`: drawing `x` conditioned on `θ`
 3. `logjoint(θ, x)`: computing the log-joint probability of `θ` and `x`
 
-1 and 2 are used to perform the test and 3 is used to make the Q-Q plot.
+1 and 2 are used to perform the Geweke test and 3 is used to make the Q-Q plot.
 
-### Lower-level APIs
+## Lower-level APIs
+
+### Geweke test
+
+Defining the Geweke test
+
+```julia
+cfg = GewekeTest(n_samples::Int)
+```
+
+where `n_samples` is the number of samples used for testing.
 
 Performing the Geweke test
 
 ```julia
-perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given, g=nothing)
+res = perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given, g=nothing)
 ```
 
 where
@@ -63,7 +73,7 @@ where
 
 ## TODOs
 
-- [x] Interface with [DynamicPPL.jl](https://github.com/TuringLang/DynamicPPL.jl) so that `rand_θ` and `rand_x_given` can be automatically generated.
+- [x] Interface with [DynamicPPL.jl](https://github.com/TuringLang/DynamicPPL.jl) so that `rand_marginal` and `rand_x_given` can be automatically generated.
 - [ ] Interface with [AbstractMCMC.jl](https://github.com/TuringLang/AbstractMCMC.jl) so that `rand_θ_given` can be automatically generated.
 - [ ] Support KSD for Geweke test via [KernelGoodnessOfFit.jl](https://github.com/torfjelde/KernelGoodnessOfFit.jl/tree/master/src).
 
