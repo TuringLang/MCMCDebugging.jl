@@ -1,3 +1,4 @@
 _research
 .ipynb_checkpoints
+.vscode
 Manifest.toml

@@ -10,6 +10,9 @@ See the [notebook](https://nbviewer.jupyter.org/github/xukai92/MCMCDebugging.jl/
 
 ## Usage
 
+The example [notebook](https://nbviewer.jupyter.org/github/xukai92/MCMCDebugging.jl/blob/master/docs/example.ipynb) covers most of the usages.
+Some details on the model definition via DynamicPPL is explained below.
+
 ### Defining test models via DynamicPPL.jl
 
 MCMCDebugging.jl allows using DynamicPPL.jl to define test models.
@@ -70,12 +73,6 @@ plot(res::GewekeTestResult, logjoint)
 where
 
 - `logjoint(θ, x)` computes the log-joint probability of `θ` and `x`
-
-## TODOs
-
-- [x] Interface with [DynamicPPL.jl](https://github.com/TuringLang/DynamicPPL.jl) so that `rand_marginal` and `rand_x_given` can be automatically generated.
-- [ ] Interface with [AbstractMCMC.jl](https://github.com/TuringLang/AbstractMCMC.jl) so that `rand_θ_given` can be automatically generated.
-- [ ] Support KSD for Geweke test via [KernelGoodnessOfFit.jl](https://github.com/torfjelde/KernelGoodnessOfFit.jl/tree/master/src).
 
 ## References
 
