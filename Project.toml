@@ -1,7 +1,7 @@
 name = "MCMCDebugging"
 uuid = "6d524b87-5f90-4494-b601-374a5b87a94b"
 authors = ["Kai Xu <xukai921110@gmail.com>"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
@@ -19,6 +19,6 @@ DynamicPPL = "0.8"
 HypothesisTests = "0.10"
 LabelledArrays = "1"
 ProgressMeter = "1"
-RecipesBase = "1"
+RecipesBase = "0.7,1"
 UnPack = "1"
 julia = "1"
