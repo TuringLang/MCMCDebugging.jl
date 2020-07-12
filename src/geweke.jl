@@ -73,7 +73,7 @@ function perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given, g=
     samples_bwd = @LArray samples_bwd (θ=(1:dim_θ,:), x=(dim_θ+1:dim_θ+dim_x,:))
 
     # Compute statistics
-    if isnothing(g)
+    if g isa Nothing
         @warn "Test function `g` is not provided. Statistic is not computed."
         statistic, pval = missing, missing
     else

@@ -1,7 +1,7 @@
 name = "MCMCDebugging"
 uuid = "6d524b87-5f90-4494-b601-374a5b87a94b"
 authors = ["Kai Xu <xukai921110@gmail.com>"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"

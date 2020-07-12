@@ -23,7 +23,7 @@ the median of pair-wise Ecludean distances and `n` is the number of samples in `
 function mmd_of(x_nu, x_de; σ=nothing)
     d²_dede, d²_denu, d²_nunu = euclidsq(x_de), euclidsq(x_de, x_nu), euclidsq(x_nu)
     # Heuristic: take `σ²` as "median / log(n)"
-    if isnothing(σ)
+    if σ isa Nothing
         h = median(vcat(vec.([d²_dede, d²_denu, d²_nunu]))) / log(size(d²_dede, 1))
         σ = sqrt(h)
     end
