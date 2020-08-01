@@ -17,8 +17,8 @@ export CLTTest
 
 ### DynamicPPL integration
 
-perform(cfg::GewekeTest, modelgen::ModelGen, rand_θ_given, g=nothing) = 
-    perform(cfg, modelgen(missing, missing), θ -> modelgen(θ, missing)()[2], rand_θ_given, g)
+perform(cfg::GewekeTest, modelgen::ModelGen, args...; kwargs...) = 
+    perform(cfg, modelgen(missing, missing), θ -> modelgen(θ, missing)()[2], args...; kwargs...)
 
 @recipe function f(res::GewekeTestResult, modelgen::ModelGen)
     m = modelgen(missing, missing)
