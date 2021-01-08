@@ -19,7 +19,7 @@ MCMCDebugging.jl allows using DynamicPPL.jl to define test models.
 In the example [notebook](https://nbviewer.jupyter.org/github/xukai92/MCMCDebugging.jl/blob/master/docs/example.ipynb), the test model is defined as
 
 ```julia
-@model function BetaBinomial(θ, x)
+@model function BetaBinomial(θ=missing, x=missing)
     θ ~ Beta(2, 3)
     x ~ Binomial(3, θ)
     return θ, x
@@ -28,7 +28,8 @@ end
 
 There are a few requirements from MCMCDebugging.jl to use the defined model.
 
-1. The model should take `θ` and `x` as inputs.
+1. The model should take `θ` and `x` as inputs (in order) and optionally being `missing`.
+  - So that the model can be used to generate the marginal sampler as e.g. `BetaBinomial()` and conditional sampler as e.g. `BetaBinomial(θ)`
 2. The model should return the parameter `θ` and the data `x` as a tuple.
 
 With these two points, MCMCDebugging.jl can generate several functions used by lower-level APIs.
@@ -54,7 +55,7 @@ where `n_samples` is the number of samples used for testing.
 Performing the Geweke test
 
 ```julia
-res = perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given, g=nothing; progress=true)
+res = perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given; g=nothing, progress=true)
 ```
 
 where
@@ -73,6 +74,14 @@ plot(res::GewekeTestResult, logjoint)
 where
 
 - `logjoint(θ, x)` computes the log-joint probability of `θ` and `x`
+
+In case models are defined by DynamicPPL.jl, you can use
+
+```julia
+plot(res::GewekeTestResult, model)
+```
+
+For example, `plot(res, BetaBinomial())`. Note we have to pass an instantiated model (i.e. BetaBinomial()) here, for now, to make Julia correctly dispatch the plot recipe.
 
 ## References
 

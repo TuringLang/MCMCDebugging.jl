@@ -2,4 +2,5 @@
 .history
 .vscode
 _research
+.DS_Store
 Manifest.toml

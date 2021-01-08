@@ -35,12 +35,12 @@ function Base.show(io::IO, res::GewekeTestResult)
 end
 
 """
-    perform(cfg::GewekeTest, rand_θ, rand_x_given, rand_θ_given, g=nothing)
+    perform(cfg::GewekeTest, rand_θ::Function, rand_x_given::Function, rand_θ_given::Function, g=nothing)
 
 Run Geweke (joint distribution) test and compute the test statistic 
 using `g` as the test function as in Equation (6) of (Geweke, 2014).
 """
-function perform(cfg::GewekeTest, rand_marginal, rand_x_given, rand_θ_given, g=nothing; progress=true)
+function perform(cfg::GewekeTest, rand_marginal::Function, rand_x_given::Function, rand_θ_given::Function; g=nothing, progress=true)
     @unpack n_samples = cfg
     
     # Generate samples

@@ -17,16 +17,22 @@ export CLTTest
 
 ### DynamicPPL integration
 
-perform(cfg::GewekeTest, modelgen::ModelGen, args...; kwargs...) = 
-    perform(cfg, modelgen(missing, missing), θ -> modelgen(θ, missing)()[2], args...; kwargs...)
+function perform(cfg::GewekeTest, modelgen::Function, rand_θ_given::Function; kwargs...)
+    model = modelgen()
+    rand_marginal() = model()
+    function rand_x_given(θ)
+        _, x = modelgen(θ)()
+        return x
+    end
+    return perform(cfg, rand_marginal, rand_x_given, rand_θ_given; kwargs...)
+end
 
-@recipe function f(res::GewekeTestResult, modelgen::ModelGen)
-    m = modelgen(missing, missing)
-    vi = VarInfo(m)
+@recipe function f(res::GewekeTestResult, model::Model)
+    vi = VarInfo(model)
     spl = SampleFromPrior()
     function _logjoint(θ, x)
         vi[spl] = cat(θ, x; dims=1)
-        return logjoint(m, vi)
+        return logjoint(model, vi)
     end
     res, _logjoint
 end
