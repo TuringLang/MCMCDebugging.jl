@@ -15,7 +15,7 @@ UnPack = "3a884ed6-31ef-47d7-9d2a-63182c4928ed"
 
 [compat]
 Distributions = "0.22, 0.23, 0.24, 0.25"
-DynamicPPL = "0.10"
+DynamicPPL = "0.21, 0.22"
 HypothesisTests = "0.10"
 LabelledArrays = "1"
 ProgressMeter = "1"
